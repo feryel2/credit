@@ -14,6 +14,8 @@ Application PHP 8 native en architecture MVC, sans framework, avec PDO SQLite po
 - Enregistrement manuel des paiements par le personnel, avec paiements partiels, solde restant et reçu PDF par paiement.
 - Recherche multicritère et jointures SQL.
 - Front-office et back-office responsives.
+- Tableau de bord d’équipe avec navigation latérale, état du parc, suivi des demandes et paiements réellement enregistrés.
+- Illustrations vectorielles adaptées au type d’équipement pour différencier les cartes du catalogue.
 
 ## Règles de location
 - Une demande client reste en attente et ne réserve pas définitivement le stock.

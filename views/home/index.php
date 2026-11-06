@@ -159,12 +159,10 @@
         <div class="home-equipment-grid">
             <?php foreach (array_slice($equipments, 0, 6) as $equipment): ?>
                 <?php
-                    $equipmentCategory = mb_strtolower($equipment['category_name'] ?? '');
-                    $equipmentImage = str_contains($equipmentCategory, 'vid') ? 'camera.jpg' : (str_contains($equipmentCategory, 'audio') ? 'audio.jpg' : 'atelier.jpg');
                     $currentUser = Session::get('user');
                 ?>
                 <article class="home-equipment-card">
-                    <img class="home-equipment-photo" src="/assets/images/<?= $equipmentImage ?>" alt="<?= htmlspecialchars($equipment['name']) ?>" loading="lazy">
+                    <?php require __DIR__ . '/../partials/equipment_visual.php'; ?>
                     <div class="home-equipment-content">
                         <p class="home-equipment-category"><?= htmlspecialchars($equipment['category_name'] ?? 'Équipement') ?></p>
                         <h3><?= htmlspecialchars($equipment['name']) ?></h3>

@@ -13,12 +13,8 @@
 
     <div class="grid">
         <?php foreach ($equipments as $equipment): ?>
-            <?php
-                $equipmentCategory = mb_strtolower($equipment['category_name'] ?? '');
-                $equipmentImage = str_contains($equipmentCategory, 'vid') ? 'camera.jpg' : (str_contains($equipmentCategory, 'audio') ? 'audio.jpg' : 'atelier.jpg');
-            ?>
             <article class="card catalog-card">
-                <img class="catalog-photo" src="/assets/images/<?= $equipmentImage ?>" alt="<?= htmlspecialchars($equipment['name']) ?>" loading="lazy">
+                <?php require __DIR__ . '/../partials/equipment_visual.php'; ?>
                 <div class="catalog-card-content">
                     <p class="home-equipment-category"><?= htmlspecialchars($equipment['category_name'] ?? 'Équipement') ?></p>
                     <h2><?= htmlspecialchars($equipment['name']) ?></h2>
