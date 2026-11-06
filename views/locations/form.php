@@ -4,6 +4,17 @@
         $isClient = ($currentUser['role'] ?? '') === 'client';
         $isStaff = in_array($currentUser['role'] ?? '', ['responsable_inventaire', 'agent_location'], true);
         $workflowStatus = $workflowStatus ?? ($location['status'] ?? '');
+        $selectedEquipmentRate = (float)($selectedEquipment['daily_rate'] ?? 0);
+        if (!$selectedEquipment && !empty($location['equipment_id'])) {
+            foreach ($equipments as $equipmentOption) {
+                if ((int)$equipmentOption['id'] === (int)$location['equipment_id']) {
+                    $selectedEquipmentRate = (float)$equipmentOption['daily_rate'];
+                    break;
+                }
+            }
+        } elseif (!$selectedEquipment && !empty($equipments[0])) {
+            $selectedEquipmentRate = (float)$equipments[0]['daily_rate'];
+        }
     ?>
     <div class="form-cover form-cover-location">
         <div>
@@ -17,8 +28,8 @@
             <div>
                 <label for="equipment_id">Équipement</label>
                 <select id="equipment_id" name="equipment_id" required>
-                    <?php foreach ($equipments as $equipment): ?>
-                        <option value="<?= (int)$equipment['id'] ?>" <?= (($location['equipment_id'] ?? '') == $equipment['id']) ? 'selected' : '' ?>>
+                    <?php foreach ($equipments as $equipmentIndex => $equipment): ?>
+                        <option value="<?= (int)$equipment['id'] ?>" data-daily-rate="<?= htmlspecialchars((string)$equipment['daily_rate']) ?>" <?= (($location['equipment_id'] ?? '') == $equipment['id'] || (empty($location['equipment_id']) && $equipmentIndex === 0)) ? 'selected' : '' ?>>
                             <?= htmlspecialchars($equipment['name']) ?><?= $equipment['status'] !== 'available' ? ' — indisponible' : '' ?>
                         </option>
                     <?php endforeach; ?>
@@ -49,7 +60,7 @@
             </div>
             <div>
                 <label>Tarif journalier</label>
-                <p class="form-static-value"><?= htmlspecialchars($selectedEquipment['daily_rate'] ?? '0.00') ?> € / jour <small>Tarif calculé à partir du catalogue</small></p>
+                <p class="form-static-value"><span id="location-daily-rate"><?= number_format($selectedEquipmentRate, 2, ',', ' ') ?></span> € / jour <small>Tarif calculé à partir du catalogue</small></p>
             </div>
             <div>
                 <label for="quantity">Quantité demandée</label>
@@ -108,3 +119,16 @@
         </div>
     </form>
 </section>
+<script>
+    const equipmentSelect = document.getElementById('equipment_id');
+    const dailyRateDisplay = document.getElementById('location-daily-rate');
+    if (equipmentSelect && dailyRateDisplay) {
+        equipmentSelect.addEventListener('change', () => {
+            const rate = Number(equipmentSelect.selectedOptions[0]?.dataset.dailyRate || 0);
+            dailyRateDisplay.textContent = new Intl.NumberFormat('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format(rate);
+        });
+    }
+</script>

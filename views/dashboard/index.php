@@ -16,29 +16,7 @@ $equipmentStatusClasses = [
 $equipmentStatusTotal = max(1, count($equipments));
 ?>
 <div class="dashboard-shell">
-    <aside class="dashboard-sidebar" aria-label="Navigation de l’administration">
-        <div class="dashboard-sidebar-brand">
-            <span class="dashboard-brand-mark" aria-hidden="true">E</span>
-            <span><strong>EquipRent</strong><small>ESPACE ÉQUIPE</small></span>
-        </div>
-        <p class="dashboard-sidebar-label">MENU PRINCIPAL</p>
-        <nav class="dashboard-side-nav" aria-label="Administration">
-            <a class="dashboard-side-link is-active" href="/dashboard" aria-current="page"><span aria-hidden="true">▦</span>Vue d’ensemble</a>
-            <a class="dashboard-side-link" href="/equipments"><span aria-hidden="true">▣</span>Équipements <small><?= (int)$dashboardStats['equipment_count'] ?></small></a>
-            <a class="dashboard-side-link" href="/locations"><span aria-hidden="true">⇄</span>Locations <small><?= (int)$dashboardStats['pending_locations'] ?></small></a>
-            <?php if ($isInventoryManager): ?>
-                <a class="dashboard-side-link" href="/categories"><span aria-hidden="true">◈</span>Catégories</a>
-            <?php endif; ?>
-            <a class="dashboard-side-link" href="/catalog"><span aria-hidden="true">⌕</span>Voir le catalogue</a>
-        </nav>
-        <div class="dashboard-sidebar-bottom">
-            <div class="dashboard-sidebar-user">
-                <span class="dashboard-avatar" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr($currentUser['name'] ?? 'E', 0, 1))) ?></span>
-                <span><strong><?= htmlspecialchars($currentUser['name'] ?? 'Équipe') ?></strong><small><?= $isInventoryManager ? 'Responsable inventaire' : 'Agent de location' ?></small></span>
-            </div>
-            <a class="dashboard-logout" href="/logout">Se déconnecter <span aria-hidden="true">↗</span></a>
-        </div>
-    </aside>
+    <?php require __DIR__ . '/../partials/admin_sidebar.php'; ?>
 
     <div class="dashboard-main">
         <header class="dashboard-heading">

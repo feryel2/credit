@@ -1,6 +1,9 @@
 <?php
 $authUser = Session::get('user');
 $role = $authUser['role'] ?? '';
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$isAdminUser = in_array($role, ['responsable_inventaire', 'agent_location'], true);
+$showAdminShell = $isAdminUser && !in_array($requestPath, ['/', '/home', '/catalog', '/dashboard'], true);
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,8 +44,17 @@ $role = $authUser['role'] ?? '';
         </div>
     </header>
 
-    <main class="container page">
+    <main class="container page<?= $showAdminShell ? ' page-admin' : '' ?>">
+        <?php if ($showAdminShell): ?>
+            <div class="dashboard-shell">
+                <?php require __DIR__ . '/../partials/admin_sidebar.php'; ?>
+                <div class="dashboard-main">
+        <?php endif; ?>
         <?php require $viewPath; ?>
+        <?php if ($showAdminShell): ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </main>
 
     <footer class="footer">

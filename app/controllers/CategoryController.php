@@ -10,7 +10,14 @@ class CategoryController extends Controller
         $this->requireRole('responsable_inventaire');
 
         $pdo = Database::getConnection();
-        $categories = Category::all($pdo);
+        $categories = $pdo->query(
+            'SELECT c.*, COUNT(e.id) AS equipment_count,
+                COALESCE(SUM(CASE WHEN e.status = "available" AND e.stock_level > 0 THEN 1 ELSE 0 END), 0) AS available_count
+            FROM categories c
+            LEFT JOIN equipments e ON e.category_id = c.id
+            GROUP BY c.id
+            ORDER BY c.id DESC'
+        )->fetchAll();
         $this->render('categories/index', ['categories' => $categories]);
     }
 
