@@ -543,3 +543,82 @@ th, td { border-bottom: 1px solid var(--border); padding: 0.8rem 0.5rem; text-al
     .admin-inline-alert > a { margin-left: auto; }
     .admin-category-card > p { min-height: 0; }
 }
+.page-client { width: min(1500px, 96vw); }
+.client-shell { display: grid; grid-template-columns: 225px minmax(0, 1fr); align-items: start; gap: 1.25rem; }
+.client-sidebar { background: linear-gradient(160deg, #10203a, #101c33 72%); }
+.client-main { display: grid; min-width: 0; gap: 1rem; }
+.client-welcome { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.1rem 0 0.2rem; }
+.client-welcome h1 { margin: 0; color: #12213b; font-size: clamp(1.55rem, 3vw, 2rem); letter-spacing: -0.035em; }
+.client-welcome h1 span { font-size: 1.2rem; }
+.client-welcome > div > p:last-child { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.84rem; line-height: 1.5; }
+.client-welcome-banner { position: relative; display: flex; min-height: 205px; align-items: center; justify-content: space-between; gap: 1.5rem; overflow: hidden; padding: clamp(1.4rem, 3vw, 2.2rem); border: 1px solid #dbeafe; border-radius: 15px; background: linear-gradient(110deg, #eff6ff 0%, #f8fafc 58%, #e0f2fe 100%); }
+.client-welcome-banner > div:first-child { position: relative; z-index: 1; max-width: 590px; }
+.client-welcome-banner .home-eyebrow { color: #2563eb; }
+.client-welcome-banner h2 { margin: 0; color: #12213b; font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -0.035em; }
+.client-welcome-banner p:not(.home-eyebrow) { max-width: 520px; margin: 0.55rem 0 1rem; color: #64748b; font-size: 0.82rem; line-height: 1.55; }
+.client-welcome-banner .button-link { min-height: 40px; gap: 0.4rem; font-size: 0.75rem; }
+.client-banner-illustration { position: relative; display: grid; width: 180px; height: 150px; flex: 0 0 auto; place-items: center; }
+.client-banner-orbit { position: absolute; width: 125px; height: 125px; border: 1px solid rgba(37,99,235,0.2); border-radius: 50%; }
+.client-banner-orbit-two { width: 95px; height: 95px; border-color: rgba(37,99,235,0.15); }
+.client-banner-tool { display: grid; width: 62px; height: 62px; place-items: center; border: 1px solid rgba(255,255,255,0.8); border-radius: 20px; background: linear-gradient(145deg, #fff, #dbeafe); box-shadow: 0 15px 35px rgba(37,99,235,0.16); color: #2563eb; font-size: 1.7rem; transform: rotate(-8deg); }
+.client-banner-tool-small { position: absolute; top: 20px; right: 12px; width: 35px; height: 35px; border-radius: 12px; color: #059669; font-size: 1.1rem; transform: rotate(12deg); }
+.client-stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; }
+.client-stats-grid .dashboard-kpi { min-height: 130px; }
+.client-stats-grid .dashboard-kpi-foot { font-size: 0.65rem; }
+.client-stats-grid .dashboard-kpi-link { color: #2563eb; }
+.client-recent-panel { margin: 0; }
+.client-locations-table { min-width: 720px; }
+.client-locations-table td:last-child { min-width: 120px; }
+.client-discover-section { display: grid; gap: 0.6rem; }
+.client-discover-section > .dashboard-panel-heading { margin: 0; }
+.client-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; }
+.client-product-grid .home-equipment-card { min-width: 0; }
+.client-product-grid .home-equipment-content { padding: 0.95rem; }
+.client-product-grid .home-equipment-content h3 { font-size: 0.92rem; }
+.client-product-grid .home-equipment-bottom { align-items: flex-start; flex-direction: column; }
+.client-product-grid .home-equipment-link { font-size: 0.75rem; }
+.client-product-grid .equipment-visual { min-height: 150px; }
+.catalog-page-heading { margin-bottom: 0.1rem; }
+.catalog-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.catalog-filter-form { grid-template-columns: minmax(190px, 1.5fr) minmax(170px, 1fr) auto; }
+.catalog-filter-form input { grid-column: auto; }
+.catalog-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; }
+.catalog-product-card { min-width: 0; }
+.catalog-product-card .home-equipment-content { padding: 1rem; }
+.catalog-product-card .home-equipment-content h3 { font-size: 0.95rem; }
+.catalog-product-card .home-equipment-bottom { align-items: flex-start; flex-direction: column; }
+.catalog-product-card .home-equipment-link { font-size: 0.78rem; }
+.catalog-product-card .equipment-visual { min-height: 175px; }
+.catalog-data-note { margin: -0.2rem 0 0; }
+@media (max-width: 1100px) {
+    .client-shell { grid-template-columns: 195px minmax(0, 1fr); gap: 0.9rem; }
+    .client-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .client-product-grid, .catalog-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+    .page-client { width: min(1200px, 94vw); }
+    .client-shell { grid-template-columns: 1fr; gap: 0.85rem; }
+    .client-sidebar { min-height: auto; }
+    .client-sidebar .dashboard-sidebar-label, .client-sidebar .dashboard-sidebar-bottom { display: none; }
+    .client-sidebar .dashboard-sidebar-brand { padding-bottom: 0.75rem; }
+    .client-sidebar .dashboard-side-nav { display: flex; overflow-x: auto; gap: 0.4rem; padding-bottom: 0.15rem; }
+    .client-sidebar .dashboard-side-link { flex: 0 0 auto; min-height: 38px; white-space: nowrap; }
+    .client-sidebar .dashboard-side-link small { display: none; }
+    .client-banner-illustration { width: 130px; }
+}
+@media (max-width: 560px) {
+    .client-welcome { align-items: flex-start; flex-direction: column; }
+    .client-welcome .dashboard-primary-action { width: 100%; }
+    .client-welcome-banner { min-height: 190px; }
+    .client-banner-illustration { position: absolute; right: -25px; bottom: -5px; width: 100px; height: 110px; opacity: 0.55; }
+    .client-banner-orbit { width: 90px; height: 90px; }
+    .client-banner-orbit-two { width: 65px; height: 65px; }
+    .client-banner-tool { width: 46px; height: 46px; border-radius: 15px; }
+    .client-banner-tool-small { width: 28px; height: 28px; }
+    .client-stats-grid, .client-product-grid, .catalog-product-grid, .catalog-summary-grid { grid-template-columns: 1fr; }
+    .client-stats-grid .dashboard-kpi { min-height: 115px; }
+    .client-discover-section > .dashboard-panel-heading { align-items: flex-start; flex-direction: column; }
+    .catalog-filter-form { grid-template-columns: 1fr; }
+    .catalog-filter-form button { width: 100%; }
+    .catalog-product-card .home-equipment-bottom { align-items: center; flex-direction: row; }
+}

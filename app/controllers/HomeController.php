@@ -3,6 +3,8 @@
 require_once __DIR__ . '/../core/Controller.php';
 require_once __DIR__ . '/../models/Equipment.php';
 require_once __DIR__ . '/../models/Category.php';
+require_once __DIR__ . '/../models/Location.php';
+require_once __DIR__ . '/../models/Payment.php';
 
 class HomeController extends Controller
 {
@@ -11,6 +13,38 @@ class HomeController extends Controller
         $pdo = Database::getConnection();
         $equipments = Equipment::search($pdo, ['status' => 'available']);
         $categories = Category::all($pdo);
+        $currentUser = Session::get('user');
+        if (($currentUser['role'] ?? '') === 'client') {
+            $locations = array_values(array_filter(
+                Location::all($pdo),
+                static fn (array $location): bool => (int)$location['client_id'] === (int)$currentUser['id']
+            ));
+            $clientStats = [
+                'total' => count($locations),
+                'pending' => 0,
+                'accepted' => 0,
+                'paid' => 0.0,
+                'balance' => 0.0,
+            ];
+            foreach ($locations as &$location) {
+                $location['payments'] = Payment::forLocation($pdo, (int)$location['id']);
+                $location['paid_amount'] = Payment::totalForLocation($pdo, (int)$location['id']);
+                $location['balance_due'] = max(0, round((float)$location['total_amount'] - $location['paid_amount'], 2));
+                $clientStats['pending'] += (int)($location['status'] === 'pending');
+                $clientStats['accepted'] += (int)($location['status'] === 'accepted');
+                $clientStats['paid'] += $location['paid_amount'];
+                $clientStats['balance'] += $location['balance_due'];
+            }
+            unset($location);
+
+            $this->render('home/client_dashboard', [
+                'equipments' => $equipments,
+                'clientLocations' => array_slice($locations, 0, 4),
+                'clientStats' => $clientStats,
+            ]);
+            return;
+        }
+
         $categoryStats = [];
         $startingRate = null;
 
@@ -76,12 +110,25 @@ class HomeController extends Controller
     {
         $pdo = Database::getConnection();
         $categories = Category::all($pdo);
+        $user = Session::get('user');
+        $clientStats = null;
+        if (($user['role'] ?? '') === 'client') {
+            $clientStats = ['total' => count(array_filter(
+                Location::all($pdo),
+                static fn (array $location): bool => (int)$location['client_id'] === (int)$user['id']
+            ))];
+        }
         $filters = [
             'query' => trim($_GET['query'] ?? ''),
             'category_id' => $_GET['category_id'] ?? '',
             'status' => 'available',
         ];
         $equipments = Equipment::search($pdo, $filters);
-        $this->render('home/catalog', ['equipments' => $equipments, 'categories' => $categories, 'filters' => $filters]);
+        $this->render('home/catalog', [
+            'equipments' => $equipments,
+            'categories' => $categories,
+            'filters' => $filters,
+            'clientStats' => $clientStats,
+        ]);
     }
 }

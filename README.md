@@ -16,6 +16,7 @@ Application PHP 8 native en architecture MVC, sans framework, avec PDO SQLite po
 - Front-office et back-office responsives.
 - Tableau de bord d’équipe avec navigation latérale, état du parc, suivi des demandes et paiements réellement enregistrés.
 - Pages d’administration harmonisées pour l’inventaire, les catégories et les locations, avec navigation contextuelle et vues adaptées aux petits écrans.
+- Espaces administrateur et client avec navigation latérale dédiée; le client retrouve ses demandes, soldes et documents depuis son accueil.
 - Illustrations vectorielles adaptées au type d’équipement pour différencier les cartes du catalogue.
 
 ## Règles de location
