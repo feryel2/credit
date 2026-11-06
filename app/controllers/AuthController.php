@@ -17,7 +17,7 @@ class AuthController extends Controller
 
             if ($user && password_verify($password, $user['password_hash'])) {
                 Session::set('user', $user);
-                $this->redirect('/');
+                $this->redirect(in_array($user['role'], ['responsable_inventaire', 'agent_location'], true) ? '/dashboard' : '/');
             }
 
             $this->render('auth/login', ['error' => 'Identifiants invalides.']);

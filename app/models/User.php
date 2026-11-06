@@ -8,12 +8,25 @@ class User
         return $stmt->fetchAll();
     }
 
+    public static function allClients(PDO $pdo): array
+    {
+        $stmt = $pdo->query("SELECT id, name, email FROM users WHERE role = 'client' ORDER BY name ASC");
+        return $stmt->fetchAll();
+    }
+
     public static function findById(PDO $pdo, int $id): ?array
     {
         $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
         $stmt->execute([':id' => $id]);
         $user = $stmt->fetch();
         return $user ?: null;
+    }
+
+    public static function findClientById(PDO $pdo, int $id): ?array
+    {
+        $stmt = $pdo->prepare("SELECT id, name, email FROM users WHERE id = :id AND role = 'client' LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch() ?: null;
     }
 
     public static function findByEmail(PDO $pdo, string $email): ?array

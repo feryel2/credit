@@ -1,5 +1,6 @@
 <?php
 $authUser = Session::get('user');
+$role = $authUser['role'] ?? '';
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,13 +16,23 @@ $authUser = Session::get('user');
             <nav>
                 <a href="/">Accueil</a>
                 <a href="/catalog">Catalogue</a>
-                <a href="/equipments">Équipements</a>
-                <a href="/locations">Locations</a>
-                <a href="/categories">Catégories</a>
+
+                <?php if ($authUser): ?>
+                    <?php if (in_array($role, ['responsable_inventaire', 'agent_location'], true)): ?>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/equipments">Équipements</a>
+                        <a href="/locations">Locations</a>
+                        <?php if ($role === 'responsable_inventaire'): ?>
+                            <a href="/categories">Catégories</a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <a href="/locations">Mes locations</a>
+                    <?php endif; ?>
+                <?php endif; ?>
             </nav>
             <?php if ($authUser): ?>
                 <div class="userbox">
-                    <span><?= htmlspecialchars($authUser['name']) ?></span>
+                    <span><?= htmlspecialchars($authUser['name']) ?> (<?= htmlspecialchars($role) ?>)</span>
                     <a href="/logout">Déconnexion</a>
                 </div>
             <?php else: ?>

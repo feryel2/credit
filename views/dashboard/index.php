@@ -16,6 +16,18 @@
     </div>
 </section>
 
+<?php if (!empty($lowStock)): ?>
+    <section class="alert error stock-alert">
+        <strong>Alertes de stock (<?= count($lowStock) ?>)</strong>
+        <ul>
+            <?php foreach ($lowStock as $item): ?>
+                <li><?= htmlspecialchars($item['name']) ?> : <?= (int)$item['stock_level'] ?> unité(s), seuil d’alerte <?= (int)$item['alert_threshold'] ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <a href="/equipments">Consulter l’inventaire</a>
+    </section>
+<?php endif; ?>
+
 <section class="card" style="margin-top: 1.5rem;">
     <h2>Équipements récents</h2>
     <table>
@@ -32,7 +44,7 @@
                 <tr>
                     <td><?= htmlspecialchars($item['name']) ?></td>
                     <td><?= htmlspecialchars($item['code']) ?></td>
-                    <td><span class="status-tag status-<?= strtolower(str_replace(' ', '-', $item['status'])) ?>"><?= htmlspecialchars($item['status']) ?></span></td>
+                    <td><span class="status-tag status-<?= strtolower(str_replace(' ', '-', $item['status'])) ?>"><?= htmlspecialchars(['available' => 'Disponible', 'rented' => 'En location', 'maintenance' => 'En maintenance', 'damaged' => 'Endommagé'][$item['status']] ?? $item['status']) ?></span></td>
                     <td><?= htmlspecialchars($item['daily_rate']) ?> €</td>
                 </tr>
             <?php endforeach; ?>

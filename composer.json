@@ -1,0 +1,8 @@
+{
+  "name": "equiprent/plateforme-location",
+  "description": "Plateforme de gestion de location d'équipements en PHP 8 MVC",
+  "type": "project",
+  "require": {
+    "php": ">=8.1"
+  }
+}

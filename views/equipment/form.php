@@ -1,5 +1,11 @@
-<section class="card">
-    <h1><?= $mode === 'edit' ? 'Modifier l’équipement' : 'Créer un équipement' ?></h1>
+<section class="card form-page">
+    <div class="form-cover form-cover-equipment">
+        <div>
+            <p class="form-eyebrow">INVENTAIRE · MATÉRIEL</p>
+            <h1><?= $mode === 'edit' ? 'Modifier l’équipement' : 'Ajouter un équipement' ?></h1>
+            <p>Renseignez les informations du matériel et son tarif de location.</p>
+        </div>
+    </div>
     <?php if (!empty($errors)) : ?>
         <div class="alert error">
             <?php foreach ($errors as $field => $messages): ?>
@@ -10,7 +16,7 @@
         </div>
     <?php endif; ?>
 
-    <form method="post" action="/equipments/<?= $mode === 'edit' ? 'edit?id=' . (int)($_GET['id'] ?? 0) : 'create' ?>">
+    <form method="post" class="form-fields" action="/equipments/<?= $mode === 'edit' ? 'edit?id=' . (int)($_GET['id'] ?? 0) : 'create' ?>">
         <div class="form-grid">
             <div>
                 <label>Catégorie</label>
@@ -62,9 +68,9 @@
                 <textarea name="condition_note"><?= htmlspecialchars($equipment['condition_note'] ?? '') ?></textarea>
             </div>
         </div>
-        <div class="row" style="margin-top: 1rem;">
-            <button type="submit">Enregistrer</button>
-            <a href="/equipments"><button type="button">Retour</button></a>
+        <div class="form-actions">
+            <button type="submit"><?= $mode === 'edit' ? 'Enregistrer les modifications' : 'Ajouter l’équipement' ?></button>
+            <a class="button-link button-link-neutral" href="/equipments">Annuler</a>
         </div>
     </form>
 </section>

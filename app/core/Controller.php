@@ -16,6 +16,34 @@ abstract class Controller
         require $layoutPath;
     }
 
+    protected function currentUser(): ?array
+    {
+        return Session::get('user');
+    }
+
+    protected function requireAuth(): array
+    {
+        $user = $this->currentUser();
+
+        if (!$user) {
+            $this->redirect('/login');
+        }
+
+        return $user;
+    }
+
+    protected function requireRole(array|string $roles): array
+    {
+        $user = $this->requireAuth();
+        $allowedRoles = is_array($roles) ? $roles : [$roles];
+
+        if (!in_array($user['role'] ?? '', $allowedRoles, true)) {
+            $this->redirect('/');
+        }
+
+        return $user;
+    }
+
     protected function redirect(string $path): void
     {
         header('Location: ' . $path);

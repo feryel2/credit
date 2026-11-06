@@ -1,7 +1,9 @@
 /vendor/
 /storage/*.sqlite
 /storage/*.sqlite-journal
+/storage/documents/
 /.env
 /.idea/
 /.vscode/
 .DS_Store
+/info.php

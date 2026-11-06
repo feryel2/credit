@@ -23,6 +23,9 @@ class Equipment
         if (!empty($filters['status'])) {
             $sql .= ' AND e.status = :status';
             $params[':status'] = $filters['status'];
+            if ($filters['status'] === 'available') {
+                $sql .= ' AND e.stock_level > 0';
+            }
         }
 
         if (!empty($filters['query'])) {
@@ -88,7 +91,63 @@ class Equipment
 
     public static function getAvailable(PDO $pdo): array
     {
-        $stmt = $pdo->query('SELECT * FROM equipments WHERE status = "available" ORDER BY name ASC');
+        $stmt = $pdo->query('SELECT * FROM equipments WHERE status = "available" AND stock_level > 0 ORDER BY name ASC');
+        return $stmt->fetchAll();
+    }
+
+    public static function availableQuantity(PDO $pdo, int $equipmentId, string $startDate, string $endDate, ?int $excludeLocationId = null): int
+    {
+        $equipment = self::findById($pdo, $equipmentId);
+        if (!$equipment || $equipment['status'] !== 'available') {
+            return 0;
+        }
+
+        $sql = 'SELECT start_date, end_date, quantity FROM locations
+            WHERE equipment_id = :equipment_id
+            AND status = "accepted"
+            AND start_date <= :end_date
+            AND end_date >= :start_date';
+        $params = [
+            ':equipment_id' => $equipmentId,
+            ':end_date' => $endDate,
+            ':start_date' => $startDate,
+        ];
+
+        if ($excludeLocationId !== null) {
+            $sql .= ' AND id != :exclude_id';
+            $params[':exclude_id'] = $excludeLocationId;
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $events = [];
+        foreach ($stmt->fetchAll() as $reservation) {
+            $reservationStart = max($startDate, $reservation['start_date']);
+            $reservationEnd = min($endDate, $reservation['end_date']);
+            $afterReservation = (new DateTimeImmutable($reservationEnd))->modify('+1 day')->format('Y-m-d');
+            $events[$reservationStart] = ($events[$reservationStart] ?? 0) + (int)$reservation['quantity'];
+            $events[$afterReservation] = ($events[$afterReservation] ?? 0) - (int)$reservation['quantity'];
+        }
+
+        ksort($events);
+        $reservedQuantity = 0;
+        $maximumReservedQuantity = 0;
+        foreach ($events as $quantityChange) {
+            $reservedQuantity += $quantityChange;
+            $maximumReservedQuantity = max($maximumReservedQuantity, $reservedQuantity);
+        }
+
+        return max(0, (int)$equipment['stock_level'] - $maximumReservedQuantity);
+    }
+
+    public static function lowStock(PDO $pdo): array
+    {
+        $stmt = $pdo->query(
+            'SELECT e.*, c.name AS category_name FROM equipments e
+            LEFT JOIN categories c ON c.id = e.category_id
+            WHERE e.stock_level <= e.alert_threshold
+            ORDER BY e.stock_level ASC, e.name ASC'
+        );
         return $stmt->fetchAll();
     }
 }

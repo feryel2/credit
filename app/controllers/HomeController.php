@@ -9,7 +9,7 @@ class HomeController extends Controller
     public function index(): void
     {
         $pdo = Database::getConnection();
-        $equipments = Equipment::getAvailable($pdo);
+        $equipments = Equipment::search($pdo, ['status' => 'available']);
         $categories = Category::all($pdo);
         $this->render('home/index', ['equipments' => $equipments, 'categories' => $categories]);
     }

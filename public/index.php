@@ -15,7 +15,7 @@ require_once __DIR__ . '/../app/controllers/HomeController.php';
 
 $router = new Router();
 
-$router->get('/', [DashboardController::class, 'index']);
+$router->get('/', [HomeController::class, 'index']);
 $router->get('/login', [AuthController::class, 'login']);
 $router->post('/login', [AuthController::class, 'login']);
 $router->get('/logout', [AuthController::class, 'logout']);
@@ -41,6 +41,9 @@ $router->post('/locations/create', [LocationController::class, 'create']);
 $router->get('/locations/edit', [LocationController::class, 'edit']);
 $router->post('/locations/edit', [LocationController::class, 'edit']);
 $router->get('/locations/delete', [LocationController::class, 'delete']);
+$router->get('/locations/download', [LocationController::class, 'download']);
+$router->get('/locations/payment', [LocationController::class, 'payment']);
+$router->post('/locations/payment', [LocationController::class, 'payment']);
 
 $router->get('/catalog', [HomeController::class, 'catalog']);
 $router->get('/home', [HomeController::class, 'index']);

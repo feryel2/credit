@@ -1,7 +1,10 @@
 <section class="card">
+    <?php $canManageEquipment = (Session::get('user')['role'] ?? '') === 'responsable_inventaire'; ?>
     <div class="row" style="justify-content: space-between; margin-bottom: 1rem;">
         <h1>Gestion des équipements</h1>
-        <a href="/equipments/create"><button>Nouveau matériel</button></a>
+        <?php if ($canManageEquipment): ?>
+            <a href="/equipments/create"><button>Nouveau matériel</button></a>
+        <?php endif; ?>
     </div>
 
     <form method="get" action="/equipments" class="form-grid" style="margin-bottom: 1rem;">
@@ -22,6 +25,17 @@
         <button type="submit">Rechercher</button>
     </form>
 
+    <?php if (!empty($lowStock)): ?>
+        <div class="alert error stock-alert">
+            <strong>Attention : <?= count($lowStock) ?> matériel<?= count($lowStock) > 1 ? 's' : '' ?> au seuil d’alerte ou en dessous.</strong>
+            <ul>
+                <?php foreach ($lowStock as $item): ?>
+                    <li><?= htmlspecialchars($item['name']) ?> — <?= (int)$item['stock_level'] ?> en stock, seuil <?= (int)$item['alert_threshold'] ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
     <table>
         <thead>
             <tr>
@@ -31,7 +45,7 @@
                 <th>Statut</th>
                 <th>Tarif</th>
                 <th>Stock</th>
-                <th>Actions</th>
+                <?php if ($canManageEquipment): ?><th>Actions</th><?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -40,13 +54,15 @@
                     <td><?= htmlspecialchars($equipment['name']) ?></td>
                     <td><?= htmlspecialchars($equipment['category_name'] ?? '') ?></td>
                     <td><?= htmlspecialchars($equipment['code']) ?></td>
-                    <td><span class="status-tag status-<?= strtolower(str_replace(' ', '-', $equipment['status'])) ?>"><?= htmlspecialchars($equipment['status']) ?></span></td>
+                    <td><span class="status-tag status-<?= strtolower(str_replace(' ', '-', $equipment['status'])) ?>"><?= htmlspecialchars(['available' => 'Disponible', 'rented' => 'En location', 'maintenance' => 'En maintenance', 'damaged' => 'Endommagé'][$equipment['status']] ?? $equipment['status']) ?></span></td>
                     <td><?= htmlspecialchars($equipment['daily_rate']) ?> €</td>
-                    <td><?= (int)$equipment['stock_level'] ?></td>
-                    <td>
-                        <a href="/equipments/edit?id=<?= (int)$equipment['id'] ?>">Modifier</a> |
-                        <a href="/equipments/delete?id=<?= (int)$equipment['id'] ?>" onclick="return confirm('Supprimer ?')">Supprimer</a>
-                    </td>
+                    <td><?= (int)$equipment['stock_level'] ?> <small>(alerte à <?= (int)$equipment['alert_threshold'] ?>)</small></td>
+                    <?php if ($canManageEquipment): ?>
+                        <td>
+                            <a href="/equipments/edit?id=<?= (int)$equipment['id'] ?>">Modifier</a> |
+                            <a href="/equipments/delete?id=<?= (int)$equipment['id'] ?>" onclick="return confirm('Supprimer ?')">Supprimer</a>
+                        </td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
