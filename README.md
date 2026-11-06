@@ -44,3 +44,6 @@ Application PHP 8 native en architecture MVC, sans framework, avec PDO SQLite po
 - admin@location.local / password123 (Responsable inventaire)
 - agent@location.local / password123 (Agent de location)
 - client@location.local / password123 (Client)
+
+## Catalogue de démonstration
+Au démarrage, l'application complète le catalogue avec des catégories et équipements de démonstration si leurs noms ou codes ne sont pas déjà présents. Ces données servent à illustrer le catalogue et ses graphiques; elles ne créent pas de réservations ni de paiements fictifs et ne remplacent pas les données existantes.

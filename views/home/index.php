@@ -32,6 +32,91 @@
     <div><span class="promise-icon" aria-hidden="true">03</span><span><strong>Une demande suivie</strong><small>Retrouvez son statut en ligne</small></span></div>
 </section>
 
+<section class="home-insights" aria-labelledby="home-insights-title">
+    <div class="home-insights-heading">
+        <div>
+            <p class="home-eyebrow">LE CATALOGUE EN UN COUP D’ŒIL</p>
+            <h2 id="home-insights-title">Des repères concrets pour choisir</h2>
+        </div>
+        <p>Explorez les équipements et comparez les tarifs journaliers par univers.</p>
+    </div>
+
+    <div class="home-insight-stats">
+        <article class="home-insight-stat">
+            <span class="home-insight-stat-icon" aria-hidden="true">▦</span>
+            <span><strong><?= (int)$homeStats['reference_count'] ?></strong><small>références disponibles</small></span>
+        </article>
+        <article class="home-insight-stat">
+            <span class="home-insight-stat-icon" aria-hidden="true">◈</span>
+            <span><strong><?= (int)$homeStats['category_count'] ?></strong><small>univers à explorer</small></span>
+        </article>
+        <article class="home-insight-stat">
+            <span class="home-insight-stat-icon" aria-hidden="true">€</span>
+            <span>
+                <strong>
+                    <?php if ($homeStats['starting_rate'] !== null): ?>
+                        <?= number_format((float)$homeStats['starting_rate'], 2, ',', ' ') ?> €
+                    <?php else: ?>
+                        —
+                    <?php endif; ?>
+                </strong>
+                <small>tarif journalier dès</small>
+            </span>
+        </article>
+    </div>
+
+    <div class="home-insight-charts">
+        <article class="home-insight-chart">
+            <div class="home-chart-heading">
+                <span class="home-chart-icon home-chart-icon-blue" aria-hidden="true">▥</span>
+                <div>
+                    <h3>Les équipements par univers</h3>
+                    <p>Nombre de références proposées</p>
+                </div>
+            </div>
+            <?php if ($homeStats['popular_categories']): ?>
+                <div class="home-chart-list">
+                    <?php foreach ($homeStats['popular_categories'] as $category): ?>
+                        <?php $categoryUrl = $category['id'] > 0 ? '/catalog?category_id=' . (int)$category['id'] : '/catalog'; ?>
+                        <a class="home-chart-row" href="<?= htmlspecialchars($categoryUrl) ?>">
+                            <span class="home-chart-label"><?= htmlspecialchars($category['name']) ?></span>
+                            <span class="home-chart-track" aria-hidden="true"><span class="home-chart-bar home-chart-bar-blue" style="width: <?= (int)$category['bar_width'] ?>%"></span></span>
+                            <strong class="home-chart-value"><?= (int)$category['references'] ?></strong>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="home-chart-empty">Les catégories disponibles apparaîtront ici.</p>
+            <?php endif; ?>
+        </article>
+
+        <article class="home-insight-chart">
+            <div class="home-chart-heading">
+                <span class="home-chart-icon home-chart-icon-green" aria-hidden="true">€</span>
+                <div>
+                    <h3>Comparez les tarifs moyens</h3>
+                    <p>Prix journalier moyen par univers</p>
+                </div>
+            </div>
+            <?php if ($homeStats['price_categories']): ?>
+                <div class="home-chart-list">
+                    <?php foreach ($homeStats['price_categories'] as $category): ?>
+                        <?php $categoryUrl = $category['id'] > 0 ? '/catalog?category_id=' . (int)$category['id'] : '/catalog'; ?>
+                        <a class="home-chart-row" href="<?= htmlspecialchars($categoryUrl) ?>">
+                            <span class="home-chart-label"><?= htmlspecialchars($category['name']) ?></span>
+                            <span class="home-chart-track" aria-hidden="true"><span class="home-chart-bar home-chart-bar-green" style="width: <?= (int)$category['bar_width'] ?>%"></span></span>
+                            <strong class="home-chart-value"><?= number_format((float)$category['average_rate'], 2, ',', ' ') ?> €</strong>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="home-chart-empty">Les tarifs seront affichés dès qu’un équipement sera disponible.</p>
+            <?php endif; ?>
+        </article>
+    </div>
+    <p class="home-insight-note">Données calculées à partir des équipements indiqués comme disponibles. La disponibilité pour vos dates est confirmée lors du traitement de votre demande.</p>
+</section>
+
 <?php if ($categories): ?>
     <section class="home-section home-categories">
         <div class="home-section-heading">
